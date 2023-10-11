@@ -11,14 +11,13 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addUser } from "../utils/userSlice";
+import { addUser } from "../slices/userSlice";
+import { BACKGROUND_IMAGE, USER_AVTAR } from "../utils/constant";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [authError, setAuthError] = useState("");
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const initialValues = {
@@ -58,7 +57,6 @@ const Login = () => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        navigate("/browse");
         // ...
       })
       .catch((error) => {
@@ -73,12 +71,11 @@ const Login = () => {
         const user = userCredential.user;
         updateProfile(user, {
           displayName: inputValuesRef.current.fullName,
-          photoURL: "https://avatars.githubusercontent.com/u/19163305?v=4",
+          photoURL: USER_AVTAR,
         })
           .then(() => {
             const { uid, email, displayName, photoURL } = auth.currentUser;
             dispatch(addUser({ uid, email, displayName, photoURL }));
-            navigate("/browse");
           })
           .catch((error) => {
             setAuthError(error.message);
@@ -110,7 +107,7 @@ const Login = () => {
       <div>
         <img
           className="absolute w-screen h-screen object-cover"
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/893a42ad-6a39-43c2-bbc1-a951ec64ed6d/1d86e0ac-428c-4dfa-9810-5251dbf446f8/IN-en-20231002-popsignuptwoweeks-perspective_alpha_website_small.jpg"
+          src={BACKGROUND_IMAGE}
           alt="BgImage"
         />
       </div>
